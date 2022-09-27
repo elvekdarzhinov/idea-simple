@@ -2,7 +2,7 @@ package org.example;
 
 public class IdeaCipher {
 
-    private static final int BLOCK_SIZE = 8; // bytes
+    public static final int BLOCK_SIZE = 8; // bytes
     public static int ROUNDS = 8;
     public static int KEY_SIZE = 16; // bytes
 
@@ -14,17 +14,13 @@ public class IdeaCipher {
         decryptionSubkeys = invertSubkeys(encryptionSubkeys);
     }
 
-    public byte[] crypt(byte[] data, boolean encrypt) {
-        if (data.length != BLOCK_SIZE) {
-            throw new IllegalArgumentException(String.format("Block must be %d bytes long.", BLOCK_SIZE));
-        }
-
+    public byte[] crypt(byte[] data, int offset, boolean encrypt) {
         int[] subkeys = encrypt ? encryptionSubkeys : decryptionSubkeys;
 
-        int x0 = ((data[0] & 0xFF) << 8) | (data[1] & 0xFF);
-        int x1 = ((data[2] & 0xFF) << 8) | (data[3] & 0xFF);
-        int x2 = ((data[4] & 0xFF) << 8) | (data[5] & 0xFF);
-        int x3 = ((data[6] & 0xFF) << 8) | (data[7] & 0xFF);
+        int x0 = ((data[offset] & 0xFF) << 8) | (data[offset + 1] & 0xFF);
+        int x1 = ((data[offset + 2] & 0xFF) << 8) | (data[offset + 3] & 0xFF);
+        int x2 = ((data[offset + 4] & 0xFF) << 8) | (data[offset + 5] & 0xFF);
+        int x3 = ((data[offset + 6] & 0xFF) << 8) | (data[offset + 7] & 0xFF);
 
         int k = 0;
         for (int round = 0; round < ROUNDS; round++) {
